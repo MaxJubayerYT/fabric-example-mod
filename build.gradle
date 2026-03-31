@@ -2,8 +2,8 @@ plugins {
     id 'fabric-loom' version '1.7.4'
 }
 
-version = "1.1.0"
-group = "com.podium-extra"
+version = "1.0.0"
+group = "com.podiumextra"
 
 repositories {
     maven { url = "https://maven.fabricmc.net/" }
@@ -11,7 +11,6 @@ repositories {
 }
 
 dependencies {
-    // These remain the same to keep the mod universal
     minecraft "com.mojang:minecraft:1.21" 
     mappings "net.fabricmc:yarn:1.21+build.1:v2"
     modImplementation "net.fabricmc:fabric-loader:0.15.11"
@@ -25,5 +24,6 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    // Ensures the bytecode is compatible with Java 21
+    it.options.release = 21
 }

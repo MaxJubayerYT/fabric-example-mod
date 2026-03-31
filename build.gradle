@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.7.4'
+    id 'fabric-loom' version '1.15-SNAPSHOT'
 }
 
 version = "1.1.0"
@@ -7,25 +7,26 @@ group = "com.podium-extra"
 
 repositories {
     maven { url = "https://maven.fabricmc.net/" }
+    maven { url = "https://maven.minecraftforge.net/" }
     mavenCentral()
 }
 
 dependencies {
-    // We use 1.16.5 so the compiler allows us to target Java 8/17.
-    // The mod will still work on 1.21+ because it only uses Fabric Loader.
-    minecraft "com.mojang:minecraft:1.16.5" 
-    mappings "net.fabricmc:yarn:1.16.5+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.15.11"
+    minecraft "com.mojang:minecraft:26.1"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:0.18.5"
 }
 
 java {
-    // This tells Gradle to use Java 21 for the build process
-    // but produce a JAR that works on Java 8+.
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    // Keeps the mod compatible with older Java versions (8+)
+    // even though we are building it with Java 25 tools.
+    it.options.release = 8
 }
 
 processResources {
@@ -33,8 +34,4 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.release = 8
 }
